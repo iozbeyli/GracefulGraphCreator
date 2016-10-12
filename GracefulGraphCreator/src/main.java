@@ -1,0 +1,113 @@
+
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+public class main {
+	static ArrayList<String> textArray = new ArrayList<String>();
+	static int lastNode=13;
+	static String readFrom="deneme.txt";
+	static String writeTo="Distinct"+readFrom;
+	static int[] nodeEdgeList = new int[lastNode];
+	static int[] idList = new int[lastNode-1];
+	static ArrayList<Long> ids=new ArrayList<Long>();
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(readFrom));
+			String line=reader.readLine();
+			while(line!=null){
+				textArray.add(line);
+				line=reader.readLine();
+			}
+			reader.close();
+			BufferedWriter writer = new BufferedWriter(new FileWriter(writeTo));
+			for(int i=0;i<textArray.size();i++){
+				clearNodeEdgeList();
+				clearIDList();
+				addNode(textArray.get(i));
+				createID();
+				
+				
+				if(checkID()){
+					writer.write(textArray.get(i)+"\n");
+				}
+				
+				
+				
+			}
+			
+			writer.close();
+			
+			
+			
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static void addNode(String line){
+		StringTokenizer lineTokenizer = new StringTokenizer(line,"-");
+		while(lineTokenizer.hasMoreTokens()){
+			String token = lineTokenizer.nextToken();
+			StringTokenizer tokenTokenizer=new StringTokenizer(token,"*");
+			int first=Integer.parseInt(tokenTokenizer.nextToken());
+			int second=Integer.parseInt(tokenTokenizer.nextToken());
+			nodeEdgeList[first-1]++;
+			nodeEdgeList[second-1]++;
+		}
+	}
+	
+	public static void clearNodeEdgeList(){
+		for(int i=0;i<lastNode;i++ ){
+			nodeEdgeList[i]=0;
+		}
+	}
+	
+	public static void clearIDList(){
+		for(int i=0;i<lastNode-1;i++ ){
+			idList[i]=0;
+		}
+	}
+	
+	public static void printNodeEdgeList(){
+		String base="";
+		for(int i=0;i<lastNode;i++ ){
+			base+=nodeEdgeList[i];
+		}
+		System.out.println(base);
+	}
+	
+	public static void createID(){
+		for(int i=0;i<lastNode;i++ ){
+			idList[nodeEdgeList[i]-1]++;
+		}
+	}
+	
+	public static boolean checkID(){
+		String base="";
+		for(int i=0;i<lastNode-1;i++ ){
+			base+=idList[i];
+		}
+		long id = Long.parseLong(base);
+		if(ids.contains(id)){
+			return false;
+		}else{
+			ids.add(id);
+			return true;
+		}
+	}
+	
+	
+	
+
+}
